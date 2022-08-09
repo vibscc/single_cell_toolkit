@@ -38,7 +38,7 @@ def prepare_data(complexity_info_path: Path, assay_type):
         return x_data, y_data
     elif assay_type == "RNA":
         subsampled_columns = [
-            x for x in complexity_info_df.columns if "multi_raw_rpc_" in x
+            x for x in complexity_info_df.columns if re.match("^multi_raw_rpc_[0-9]+.*", x)
         ]
         saturation_data = complexity_info_df[subsampled_columns].copy()
         saturation_data = pd.DataFrame(saturation_data.max())
