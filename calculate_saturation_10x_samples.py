@@ -22,12 +22,12 @@ __contact__ = "jasper.janssens@kuleuven.be"
 
 def prepare_data(complexity_info_path: Path, assay_type):
     """
-    Prepare the data for the model fit.
+    Prepare the data for thef model fit.
     Returns a Tuple2 with X coordinates and Y coordinates for the model fitting
     """
     # Open complexity file
     with open(complexity_info_path) as complexity_info_fh:
-        complexity_info = json.load(complexity_info_fh)
+        complexity_info = pd.json_normalize(json.load(complexity_info_fh))
     complexity_info_df = pd.DataFrame(complexity_info)
 
     if assay_type == "ATAC":
@@ -43,7 +43,7 @@ def prepare_data(complexity_info_path: Path, assay_type):
         saturation_data = complexity_info_df[subsampled_columns].copy()
         saturation_data = pd.DataFrame(saturation_data.max())
         saturation_data.index = [
-            np.float(
+            float(
                 re.sub(
                     "multi_raw_rpc_", "", re.sub("_subsampled_duplication_frac", "", x)
                 )
@@ -120,7 +120,7 @@ def drawline(
         y_val = int(y_val)
     elif assay_type == "RNA":
         y_val = perc
-        y_val = np.float(y_val)
+        y_val = float(y_val)
 
     # find x value at which fitted line surpasses y_val
     x_coef = np.where(y_fit >= y_val)[0][0]
